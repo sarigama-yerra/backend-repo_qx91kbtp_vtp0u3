@@ -12,7 +12,7 @@ Model name is converted to lowercase for the collection name:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -35,14 +35,29 @@ class Product(BaseModel):
     title: str = Field(..., description="Product title")
     description: Optional[str] = Field(None, description="Product description")
     price: float = Field(..., ge=0, description="Price in dollars")
-    category: str = Field(..., description="Product category")
+    category: str = Field(..., description="Product category, e.g., bouquet, plant, seasonal")
+    color: Optional[str] = Field(None, description="Dominant color or palette")
+    occasion: Optional[str] = Field(None, description="Occasion like wedding, birthday, sympathy")
     in_stock: bool = Field(True, description="Whether product is in stock")
+    images: List[str] = Field(default_factory=list, description="List of image URLs")
+    care: Optional[str] = Field(None, description="Care instructions")
+    tags: List[str] = Field(default_factory=list, description="Search/filter tags")
 
-# Add your own schemas here:
-# --------------------------------------------------
+class ContactMessage(BaseModel):
+    name: str
+    email: str
+    phone: Optional[str] = None
+    subject: Optional[str] = None
+    message: str
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class Booking(BaseModel):
+    name: str
+    email: str
+    phone: Optional[str] = None
+    type: str = Field(..., description="workshop | event | consultation")
+    date: Optional[str] = Field(None, description="Requested date (ISO string)")
+    notes: Optional[str] = None
+
+class NewsletterSignup(BaseModel):
+    email: str
+    name: Optional[str] = None
